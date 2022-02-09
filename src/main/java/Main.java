@@ -8,7 +8,5 @@ public class Main {
         CriarExtratos criarExtratos = new CriarExtratos(dados);
         String pathSave = "src/main/";
         criarExtratos.gerarExtrato(pathSave);
-
-
     }
 }

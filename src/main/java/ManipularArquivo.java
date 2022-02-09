@@ -29,7 +29,7 @@ public class ManipularArquivo {
     String[] linha = csvReader.readNext();
         while ((linha = csvReader.readNext()) != null) {
             OperacaoBancaria operacaoBancaria = OperacaoBancaria.builder()
-                    .dataHoraOperacao( formatarData(linha[0]))
+                    .dataHoraOperacao(formatarData(linha[0]))
                     .contaBancaria(new ContaBancaria(linha[1], linha[2], linha[3], linha[4]))
                     .operador(linha[5])
                     .tipo(linha[6])
