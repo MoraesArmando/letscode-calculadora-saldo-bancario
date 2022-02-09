@@ -48,6 +48,5 @@ public class ManipularArquivo {
         String replace = s.replace("T", " ");
         return formatterDate.parse(replace);
     }
-
 }
 

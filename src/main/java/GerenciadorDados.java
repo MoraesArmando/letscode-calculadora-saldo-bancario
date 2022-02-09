@@ -11,7 +11,12 @@ public class GerenciadorDados {
     public void adicionar(OperacaoBancaria operacaoBancaria) {
         ArrayList<OperacaoBancaria> operationsList = new ArrayList<>();
         String idConta = operacaoBancaria.getContaBancaria().getId();
+
         ArrayList<OperacaoBancaria> contaOperations = map.get(idConta);
+        adicionaOperacoes(operacaoBancaria, operationsList, idConta, contaOperations);
+    }
+
+    private void adicionaOperacoes(OperacaoBancaria operacaoBancaria, ArrayList<OperacaoBancaria> operationsList, String idConta, ArrayList<OperacaoBancaria> contaOperations) {
         if (contaOperations == null) {
             operationsList.add(operacaoBancaria);
             map.put(idConta, operationsList);
@@ -37,12 +42,21 @@ public class GerenciadorDados {
         long dataTime = date.getTime();
         boolean status = true;
         int i = 0;
+        status = isStatus(operationsList, operacaoBancaria, listaOrdenada, dataTime, status, i);
+        if (status) {
+            listaOrdenada.add(operacaoBancaria);
+        }
+        return listaOrdenada;
+    }
+
+    private boolean isStatus(ArrayList<OperacaoBancaria> operationsList, OperacaoBancaria operacaoBancaria, ArrayList<OperacaoBancaria> listaOrdenada, long dataTime, boolean status, int i) {
+        boolean check;
         while (i < operationsList.size()) {
             OperacaoBancaria itemAtual = operationsList.get(i);
             Date itemData = itemAtual.getDataHoraOperacao();
-            long itemDataEpoch = itemData.getTime();
+            long itemDataTime = itemData.getTime();
             if (status) {
-                if (dataTime == itemDataEpoch) {
+                if (dataTime == itemDataTime) {
                     check = itemAtual.getOperador().equals(operacaoBancaria.getOperador()) && operationsList.get(i).getTipo().equals(operacaoBancaria.getTipo()) && Objects.equals(operationsList.get(i).getValor(), operacaoBancaria.getValor());
                     if (check) {
                         i += 1;
@@ -51,11 +65,11 @@ public class GerenciadorDados {
                         status = false;
                     }
                 }
-                if (dataTime > itemDataEpoch) {
+                if (dataTime > itemDataTime) {
                     listaOrdenada.add(operationsList.get(i));
                     i += 1;
                 }
-                if (dataTime < itemDataEpoch) {
+                if (dataTime < itemDataTime) {
                     listaOrdenada.add(operacaoBancaria);
                     status = false;
                 }
@@ -64,10 +78,7 @@ public class GerenciadorDados {
                 i += 1;
             }
         }
-        if (status) {
-            listaOrdenada.add(operacaoBancaria);
-        }
-        return listaOrdenada;
+        return status;
     }
 
 }

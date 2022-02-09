@@ -51,7 +51,6 @@ public class CriarExtratos {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private double getSaldo(double saldo, PrintWriter arquivoDados, OperacaoBancaria item) {
@@ -77,6 +76,4 @@ public class CriarExtratos {
         return simpleDateFormat.format(new Date(data));
 
     }
-
-
 }
