@@ -9,7 +9,6 @@ import java.util.Date;
 @Setter
 @Builder
 @ToString
-
 public class OperacaoBancaria {
 
     private Date dataHoraOperacao;

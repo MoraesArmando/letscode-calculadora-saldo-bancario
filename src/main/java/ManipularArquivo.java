@@ -18,7 +18,6 @@ public class ManipularArquivo {
         this.CSV_Path = csv_path;
     }
 
-
     public GerenciadorDados abrirCSV(){
     GerenciadorDados dados = new GerenciadorDados();
 
@@ -49,7 +48,6 @@ public class ManipularArquivo {
         String replace = s.replace("T", " ");
         return formatterDate.parse(replace);
     }
-
 
 }
 

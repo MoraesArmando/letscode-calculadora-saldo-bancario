@@ -69,5 +69,6 @@ public class GerenciadorDados {
         }
         return listaOrdenada;
     }
+
 }
 

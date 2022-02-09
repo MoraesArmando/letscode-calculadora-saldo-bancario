@@ -11,7 +11,6 @@ import java.util.Set;
 public class CriarExtratos {
     GerenciadorDados dados;
 
-
     public void gerarExtrato(String pathSave) {
         Set<String> contasSet = dados.keys();
         String[] contasArray = new String[contasSet.size()];
@@ -72,5 +71,7 @@ public class CriarExtratos {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+
 }
