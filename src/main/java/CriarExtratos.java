@@ -9,10 +9,10 @@ import java.util.Set;
 
 @AllArgsConstructor
 public class CriarExtratos {
-    GerenciadorDados dados;
+    GerenciadorDados gerenciadorDados;
 
     public void gerarExtrato(String pathSave) {
-        Set<String> contasSet = dados.keys();
+        Set<String> contasSet = gerenciadorDados.keys();
         String[] contasArray = new String[contasSet.size()];
         contasSet.toArray(contasArray);
         for (String s : contasArray) {
@@ -22,56 +22,61 @@ public class CriarExtratos {
 
     public void imprimirExtrato(String pathSave, String conta) {
         double saldo = 0.0;
-        long dateEpoch;
-        String separator = System.getProperty("file.separator");
-        String file = pathSave + separator + conta + ".txt";
+        long data;
+        String file = pathSave + "\\" + conta + ".txt";
 
-        ArrayList<OperacaoBancaria> trasacoes = dados.getKey(conta);
+        ArrayList<OperacaoBancaria> transacaoBancaria = gerenciadorDados.getKey(conta);
 
         try {
-            FileWriter arq = new FileWriter(file);
-            PrintWriter gravarArq = new PrintWriter(arq);
+            FileWriter arquio = new FileWriter(file);
+            PrintWriter arquivoDados = new PrintWriter(arquio);
 
-            gravarArq.printf("Banco " + trasacoes.get(0).getContaBancaria().getBanco() + "\n");
+            arquivoDados.printf("Banco " + transacaoBancaria.get(0).getContaBancaria().getBanco() + "\n")
+                    .printf("Agência: ... " + transacaoBancaria.get(0).getContaBancaria().getAgencia() + "\n")
+                    .printf("Conta: ..... " + transacaoBancaria.get(0).getContaBancaria().getConta() + "\n\n")
+                    .printf("Data\t\t\t\tTipo\t\tValor\t\tOperator")
+                    .printf("\n\n");
 
-            gravarArq.printf("Agência: ... " + trasacoes.get(0).getContaBancaria().getAgencia() + "\n");
-            gravarArq.printf("Conta: ..... " + trasacoes.get(0).getContaBancaria().getConta() + "\n\n");
+            for (OperacaoBancaria item : transacaoBancaria) {
 
-            gravarArq.printf("Data \t\t\t");
+                arquivoDados.printf(formataDataExtrato(item.getDataHoraOperacao()) + "\t");
 
-            gravarArq.printf("Tipo \t\t");
-            gravarArq.printf("Valor \t\t");
-            gravarArq.printf("\n\n");
-            for (OperacaoBancaria item : trasacoes) {
-
-                dateEpoch = item.getDataHoraOperacao().getTime();
-                String pattern = "dd-MM-yy HH:mm:ss";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                String date = simpleDateFormat.format(new Date(dateEpoch));
-                gravarArq.printf(date + "\t");
-
-                if (item.getTipo().equals("SAQUE")) {
-
-                    saldo = saldo - item.getValor();
-                    gravarArq.printf(item.getTipo() + "\t\t");
-                    gravarArq.printf("-%.2f\t\t", item.getValor());
-                }
-                if (item.getTipo().equals("DEPOSITO")) {
-
-                    saldo += item.getValor();
-                    gravarArq.printf(item.getTipo() + "\t");
-                    gravarArq.printf("+%.2f\t\t", item.getValor());
-                }
-
-                gravarArq.print("\t\n");
+                saldo = getSaldo(saldo, arquivoDados, item);
+                arquivoDados.printf(item.getOperador())
+                .print("\t\n");
             }
-            gravarArq.printf("\nSaldo: ...............................\t");
-            gravarArq.printf(Double.toString(saldo));
-            arq.close();
+            arquivoDados.printf("\nSaldo: ........................ ")
+                    .printf(Double.toString(saldo));
+            arquio.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
+    private double getSaldo(double saldo, PrintWriter arquivoDados, OperacaoBancaria item) {
+        if (item.getTipo().equals("SAQUE")) {
+
+            saldo -= item.getValor();
+            arquivoDados.printf(item.getTipo() + "\t\t")
+                    .printf("-%.2f\t\t", item.getValor());
+        }
+        if (item.getTipo().equals("DEPOSITO")) {
+
+            saldo += item.getValor();
+            arquivoDados.printf(item.getTipo() + "\t")
+                    .printf("+%.2f\t\t", item.getValor());
+        }
+        return saldo;
+    }
+
+    private String formataDataExtrato(Date dataHoraOperacao) {
+        long data = dataHoraOperacao.getTime();
+        String pattern = "dd-MM-yy HH:mm:ss";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(new Date(data));
+
+    }
+
 
 }
