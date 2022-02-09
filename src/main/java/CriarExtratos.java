@@ -12,16 +12,16 @@ public class CriarExtratos {
     GerenciadorDados dados;
 
 
-    public void fazerExtratos(String pathSave) {
+    public void gerarExtrato(String pathSave) {
         Set<String> contasSet = dados.keys();
         String[] contasArray = new String[contasSet.size()];
         contasSet.toArray(contasArray);
         for (String s : contasArray) {
-            criarExtrato(pathSave, s);
+            imprimirExtrato(pathSave, s);
         }
     }
 
-    public void criarExtrato(String pathSave, String conta) {
+    public void imprimirExtrato(String pathSave, String conta) {
         double saldo = 0.0;
         long dateEpoch;
         String separator = System.getProperty("file.separator");
@@ -42,7 +42,7 @@ public class CriarExtratos {
 
             gravarArq.printf("Tipo \t\t");
             gravarArq.printf("Valor \t\t");
-            gravarArq.printf("Operador \n\n");
+            gravarArq.printf("\n\n");
             for (OperacaoBancaria item : trasacoes) {
 
                 dateEpoch = item.getDataHoraOperacao().getTime();
@@ -64,7 +64,7 @@ public class CriarExtratos {
                     gravarArq.printf("+%.2f\t\t", item.getValor());
                 }
 
-                gravarArq.printf(item.getOperador() + "\t\n");
+                gravarArq.print("\t\n");
             }
             gravarArq.printf("\nSaldo: ...............................\t");
             gravarArq.printf(Double.toString(saldo));

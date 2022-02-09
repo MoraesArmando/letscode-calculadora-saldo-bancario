@@ -31,39 +31,40 @@ public class GerenciadorDados {
     }
 
     private ArrayList<OperacaoBancaria> adicionaOrdenado(ArrayList<OperacaoBancaria> operationsList, OperacaoBancaria operacaoBancaria) {
-        boolean checkEquals;
+        boolean check;
         ArrayList<OperacaoBancaria> listaOrdenada = new ArrayList<>();
-        Date novaData = operacaoBancaria.getDataHoraOperacao();
-        long novaDataEpoch = novaData.getTime();
-        boolean controle = true;
+        Date date = operacaoBancaria.getDataHoraOperacao();
+        long dataTime = date.getTime();
+        boolean status = true;
         int i = 0;
         while (i < operationsList.size()) {
-            Date itemData = operationsList.get(i).getDataHoraOperacao();
+            OperacaoBancaria itemAtual = operationsList.get(i);
+            Date itemData = itemAtual.getDataHoraOperacao();
             long itemDataEpoch = itemData.getTime();
-            if (controle) {
-                if (novaDataEpoch == itemDataEpoch) {
-                    checkEquals = operationsList.get(i).getOperador().equals(operacaoBancaria.getOperador()) && operationsList.get(i).getTipo().equals(operacaoBancaria.getTipo()) && Objects.equals(operationsList.get(i).getValor(), operacaoBancaria.getValor());
-                    if (checkEquals) {
-                        i = i + 1;
+            if (status) {
+                if (dataTime == itemDataEpoch) {
+                    check = itemAtual.getOperador().equals(operacaoBancaria.getOperador()) && operationsList.get(i).getTipo().equals(operacaoBancaria.getTipo()) && Objects.equals(operationsList.get(i).getValor(), operacaoBancaria.getValor());
+                    if (check) {
+                        i += 1;
                     } else {
                         listaOrdenada.add(operacaoBancaria);
-                        controle = false;
+                        status = false;
                     }
                 }
-                if (novaDataEpoch > itemDataEpoch) {
+                if (dataTime > itemDataEpoch) {
                     listaOrdenada.add(operationsList.get(i));
-                    i = i + 1;
+                    i += 1;
                 }
-                if (novaDataEpoch < itemDataEpoch) {
+                if (dataTime < itemDataEpoch) {
                     listaOrdenada.add(operacaoBancaria);
-                    controle = false;
+                    status = false;
                 }
             } else {
                 listaOrdenada.add(operationsList.get(i));
-                i = i + 1;
+                i += 1;
             }
         }
-        if (controle) {
+        if (status) {
             listaOrdenada.add(operacaoBancaria);
         }
         return listaOrdenada;
