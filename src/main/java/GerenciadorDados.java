@@ -38,19 +38,9 @@ public class GerenciadorDados {
     private ArrayList<OperacaoBancaria> adicionaOrdenado(ArrayList<OperacaoBancaria> operationsList, OperacaoBancaria operacaoBancaria) {
         boolean check;
         ArrayList<OperacaoBancaria> listaOrdenada = new ArrayList<>();
-        Date date = operacaoBancaria.getDataHoraOperacao();
-        long dataTime = date.getTime();
+        long dataTime = operacaoBancaria.getDataHoraOperacao().getTime();
         boolean status = true;
         int i = 0;
-        status = isStatus(operationsList, operacaoBancaria, listaOrdenada, dataTime, status, i);
-        if (status) {
-            listaOrdenada.add(operacaoBancaria);
-        }
-        return listaOrdenada;
-    }
-
-    private boolean isStatus(ArrayList<OperacaoBancaria> operationsList, OperacaoBancaria operacaoBancaria, ArrayList<OperacaoBancaria> listaOrdenada, long dataTime, boolean status, int i) {
-        boolean check;
         while (i < operationsList.size()) {
             OperacaoBancaria itemAtual = operationsList.get(i);
             Date itemData = itemAtual.getDataHoraOperacao();
@@ -78,7 +68,10 @@ public class GerenciadorDados {
                 i += 1;
             }
         }
-        return status;
+        if (status) {
+            listaOrdenada.add(operacaoBancaria);
+        }
+        return listaOrdenada;
     }
 
 }
